@@ -1,0 +1,8 @@
+.DS_Store
+.idea/
+.vscode/
+ws.code-workspace
+.env
+
+/bin/
+/data/
