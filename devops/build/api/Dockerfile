@@ -30,7 +30,7 @@ FROM alpine:3.10
 LABEL maintainer="Vadym Titov <vad.titov@gmail.com>"
 
 RUN apk update && \
-    apk add --upgrade vips-tools && \
+    apk add --upgrade vips-tools go && \
     apk add ca-certificates && rm -rf /var/cache/apk/*
 
 # Build Args
@@ -51,8 +51,8 @@ COPY migrations ./migrations
 COPY resources .${DATA_PATH}
 
 # Copy dump util
-COPY devops/bin/boltdb-dump /usr/local/bin/
-RUN chmod +x /usr/local/bin/boltdb-dump
+# COPY devops/bin/boltdb-dump /usr/local/bin/
+# RUN chmod +x /usr/local/bin/boltdb-dump
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder ${BUILD_PATH}/${APP_NAME} /usr/local/bin/

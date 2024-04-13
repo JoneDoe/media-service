@@ -174,8 +174,8 @@ ___
     * Content:
     ````
     {
-      "service": "sm-drive",
-      "version": "1.1.0.0"
+      "service": "media-service",
+      "version": "1.0.0"
     }
     ````
 ---

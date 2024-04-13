@@ -1,0 +1,322 @@
+swagger: "2.0"
+info:
+  version: "1.0.7"
+  title: "Swagger"
+host: "localhost:8080"
+tags:
+  - name: files
+  - name: info
+  - name: download
+  - name: healthcheck
+schemes:
+  - "http"
+paths:
+  /files/upload/{folder}:
+    post:
+      tags:
+        - "files"
+      summary: "Upload file(s) in sub-folder"
+      description: ""
+      operationId: "uploadInSubfolder"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "folder"
+          in: "path"
+          description: "Folder name"
+          required: true
+          type: "string"
+        - name: "files"
+          in: "formData"
+          description: "file to upload"
+          required: false
+          type: "file"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
+  /files/upload:
+    post:
+      tags:
+        - "files"
+      summary: "Upload"
+      description: ""
+      operationId: "uploadFile"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "files"
+          in: "formData"
+          description: "file to upload"
+          required: false
+          type: "file"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
+  /files/{uuid}:
+    get:
+      tags:
+        - "files"
+      summary: "Get stored file by UUID"
+      description: "Returns a single file data"
+      operationId: "getFileByUuid"
+      produces:
+        - "binary-data"
+      parameters:
+        - name: "uuid"
+          in: "path"
+          required: true
+          type: "string"
+          format: "uuid"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "File not found"
+
+    delete:
+      tags:
+        - "files"
+      summary: "Deletes file"
+      description: ""
+      operationId: "deleteFile"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "uuid"
+          in: "path"
+          required: true
+          type: "string"
+          format: "uuid"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "File not found"
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "ok"
+              data:
+                type: "string"
+                format: "uuid"
+  /files/{uuid}/{profile}:
+    get:
+      tags:
+        - "files"
+      summary: "Get resized Image"
+      operationId: "getResizedImage"
+      produces:
+        - "binary-data"
+      parameters:
+        - name: "uuid"
+          in: "path"
+          required: true
+          type: "string"
+          format: "uuid"
+        - name: "profile"
+          in: "path"
+          required: true
+          type: "string"
+          enum:
+            - small
+            - medium
+            - thumbnail
+      responses:
+        200:
+          description: "successful operation"
+  /download:
+    post:
+      tags:
+        - "download"
+      summary: "Download by source"
+      description: ""
+      operationId: "placeOrder"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/definitions/Source1"
+                - $ref: "#/definitions/Source2"
+      responses:
+        201:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/DownloadResponse"
+  /info/{uuid}:
+    get:
+      tags:
+        - "info"
+      summary: "Get stored file info"
+      operationId: "getFileInfo"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "uuid"
+          in: "path"
+          required: true
+          type: "string"
+          format: "uuid"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Info"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "File not found"
+  /__healthcheck:
+    get:
+      tags:
+        - "healthcheck"
+      summary: "Healthcheck"
+      description: ""
+      operationId: "healthcheck"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Healthcheck"
+
+definitions:
+  ApiResponse:
+    type: "object"
+    properties:
+      files:
+        type: "array"
+        items:
+          $ref: "#/definitions/File"
+      status:
+        type: "string"
+        example: "ok"
+
+  DownloadResponse:
+    type: "object"
+    properties:
+      errors:
+        type: "array"
+        items:
+          $ref: "#/definitions/DownloadError"
+      files:
+        type: "array"
+        items:
+          $ref: "#/definitions/DownloadSuccess"
+
+  File:
+    type: "object"
+    required:
+      - "fileName"
+      - "uuid"
+    properties:
+      fileName:
+        type: "string"
+        example: "photo-1541727687969-ce40493cd847.jpeg"
+      uuid:
+        type: "string"
+        format: "uuid"
+
+  Info:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        example: "ok"
+      data:
+        type: "object"
+        properties:
+          fileName:
+            type: "string"
+            example: "GeoEye_GeoEye1_50cm_8bit_RGB_DRA15.jpg"
+          uuid:
+            type: "string"
+            example: "e4106f5d-6269-434e-9b29-700690aa9ea8"
+          key:
+            type: "string"
+            example: "e4106f5d-6269-434e-9b29-700690aa9ea8.jpeg"
+          url:
+            type: "string"
+            example: "https://cdn.27zxc.com/sc--media/e4106f5d-6269-434e-9b29-700690aa9ea8.jpg"
+
+  Source1:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+        example: "https://www.wallpapertip.com/wmimgs/gallery-hd-wallpaper-wallpapers-4k.jpg"
+      thumbnail-profile:
+        type: "string"
+        enum:
+          - small
+          - medium
+          - thumbnail
+
+  Source2:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+        example: "https://www.fc-moto.de/WebRoot/FCMotoDB/Shops/10207048/5469/C75C/22BA/A5FF/63C3/4DEB/AE59/5639/Airoh-Aviator-21.jpg"
+      thumbnail-profile:
+        type: "string"
+        example: 'medium'
+        enum:
+          - small
+          - medium
+          - thumbnail
+
+  DownloadError:
+    type: "object"
+    properties:
+      source:
+        type: "string"
+        example: "https://www.fc-moto.de/WebRoot/FCMotoDB/Shops/10207048/5469/C75C/22BA/A5FF/63C3/4DEB/AE59/5639/Airoh-Aviator-21.jpg"
+      message:
+        type: "string"
+        example: 'net/http: request canceled (Client.Timeout exceeded while reading body)'
+
+  DownloadSuccess:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+        example: "https://www.wallpapertip.com/wmimgs/gallery-hd-wallpaper-wallpapers-4k.jpg"
+      fileName:
+        type: "string"
+        example: "gallery-hd-wallpaper-wallpapers-4k.jpg"
+      uuid:
+        type: "string"
+        format: "uuid"
+
+  Healthcheck:
+    type: "object"
+    properties:
+      service:
+        type: "string"
+        example: "media-service"
+      version:
+        type: "string"
+        example: "1.0.0"
