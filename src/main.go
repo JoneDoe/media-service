@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gemnasium/logrus-graylog-hook/v3"
+	graylog "github.com/gemnasium/logrus-graylog-hook/v3"
 	"github.com/getsentry/raven-go"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -46,9 +46,9 @@ func main() {
 
 	dbEngine := services.InitDb()
 
-	attachmentController := &controllers.AttachmentController{dbEngine}
-	fileController := &controllers.FileController{dbEngine}
-	fileProwlerController := &controllers.FileProwlerController{dbEngine}
+	attachmentController := &controllers.AttachmentController{DB: dbEngine}
+	fileController := &controllers.FileController{DB: dbEngine}
+	fileProwlerController := &controllers.FileProwlerController{DB: dbEngine}
 
 	router.GET("/__healthcheck", controllers.HealthCheck)
 	router.GET("/info/:uuid", fileController.FileInfo)

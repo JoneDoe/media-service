@@ -66,7 +66,7 @@ func (fbm *FileBaseManager) Url() string {
 }
 
 func (fdm *FileBaseManager) ToJson() models.FSFile {
-	return models.FSFile{fdm.Filename, fdm.Url()}
+	return models.FSFile{FileName: fdm.Filename, Url: fdm.Url()}
 }
 
 func (fdm *FileBaseManager) DirManager() *DirManager {

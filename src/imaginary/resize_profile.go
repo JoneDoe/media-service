@@ -2,7 +2,7 @@ package imaginary
 
 import (
 	"errors"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"istorage/models"
@@ -28,7 +28,7 @@ func (p *ResizeProfile) Resize(filePath string) (*ResizeResult, error) {
 
 	pattern := strings.Join([]string{"cropper", ".*", p.MediaFile.Ext()}, "")
 
-	tmpFile, _ := ioutil.TempFile("", pattern)
+	tmpFile, _ := os.CreateTemp("", pattern)
 
 	Resize(settings, filePath, tmpFile.Name())
 

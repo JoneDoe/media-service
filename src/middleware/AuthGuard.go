@@ -84,7 +84,7 @@ func BearerGuard(endpoint, authorization string) error {
 	resp, err := client.Do(req)
 	if err != nil {
 		logger.Error(err)
-		utils.Response{context}.Error(http.StatusUnauthorized, "Authorization service unavailable")
+		utils.Response{Context: context}.Error(http.StatusUnauthorized, "Authorization service unavailable")
 
 		return err
 	}

@@ -20,7 +20,7 @@ func (a *AttachmentController) StoreAttachment(c *gin.Context) {
 	files, err := validateRequest(c)
 
 	if err != nil {
-		utils.Response{c}.Error(http.StatusBadRequest, err.Error())
+		utils.Response{Context: c}.Error(http.StatusBadRequest, err.Error())
 
 		return
 	}
@@ -31,7 +31,7 @@ func (a *AttachmentController) StoreAttachment(c *gin.Context) {
 }
 
 func (a *AttachmentController) StoreAttachmentWithContext(c *gin.Context) {
-	resp := utils.Response{c}
+	resp := utils.Response{Context: c}
 
 	data := models.UploadContext{}
 	if err := c.ShouldBindUri(&data); err != nil {

@@ -10,8 +10,8 @@ import (
 
 func Store(c *gin.Context, attach *models.Attachment) error {
 	fm, err := attachment.FileManagerFactory(attachment.FileManagerConfig{
-		attach.OriginalFile.MimeType(),
-		"original",
+		MimeType: attach.OriginalFile.MimeType(),
+		Version: "original",
 	})
 
 	if err != nil {

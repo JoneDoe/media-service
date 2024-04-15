@@ -24,7 +24,7 @@ var (
 func (f *FileController) ReadFile(c *gin.Context) {
 	token, _ := bindRequestToken(c)
 
-	resp := utils.Response{c}
+	resp := utils.Response{Context: c}
 
 	media, err := f.findMediaByToken(token)
 	if err != nil {
@@ -66,7 +66,7 @@ func (f *FileController) ReadFile(c *gin.Context) {
 func (f *FileController) ReadFileWithResize(c *gin.Context) {
 	resizeProfile := c.MustGet("resizeProfile").(*imaginary.ResizeProfile)
 
-	resp := utils.Response{c}
+	resp := utils.Response{Context: c}
 
 	if resizeProfile.MediaFile.Type != models.FileTypeImage {
 		resp.Error(http.StatusUnsupportedMediaType, "Operation allowed only for image files")
@@ -92,7 +92,7 @@ func (f *FileController) ReadFileWithResize(c *gin.Context) {
 func (f *FileController) DeleteFile(c *gin.Context) {
 	token, _ := bindRequestToken(c)
 
-	resp := utils.Response{c}
+	resp := utils.Response{Context: c}
 
 	media, err := f.findMediaByToken(token)
 	if err != nil {
@@ -117,12 +117,12 @@ func (f *FileController) FileInfo(c *gin.Context) {
 
 	media, err := f.findMediaByToken(token)
 	if err != nil {
-		utils.Response{c}.Error(http.StatusNotFound, err.Error())
+		utils.Response{Context: c}.Error(http.StatusNotFound, err.Error())
 
 		return
 	}
 
-	utils.Response{c}.Success(http.StatusOK, models.MetaData{
+	utils.Response{Context: c}.Success(http.StatusOK, models.MetaData{
 		OutputModel: models.OutputModel{
 			FileName: media.OriginalName,
 			Uuid:     token.Uuid,

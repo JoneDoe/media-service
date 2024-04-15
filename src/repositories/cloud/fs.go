@@ -1,9 +1,9 @@
 package cloud
 
 import (
-	"io/ioutil"
 	"log"
 	"mime"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -90,7 +90,7 @@ func RemoveMedia(file *models.MediaFile) error {
 }
 
 func ReadFile(file *models.MediaFile) string {
-	tmpFile, err := ioutil.TempFile("", "s3-bucket.*")
+	tmpFile, err := os.CreateTemp("", "s3-bucket.*")
 	if err != nil {
 		log.Fatal(err)
 	}

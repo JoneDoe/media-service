@@ -2,7 +2,7 @@ package imaginary
 
 import (
 	"errors"
-	"io/ioutil"
+
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,7 +56,7 @@ func loadProfile(profileName string) (settings *sizeConfig, err error) {
 
 	cwd, _ := os.Getwd()
 
-	data, err := ioutil.ReadFile(filepath.Join(cwd, profilesEnv))
+	data, err := os.ReadFile(filepath.Join(cwd, profilesEnv))
 	if err != nil {
 		return nil, err
 	}

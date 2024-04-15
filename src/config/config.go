@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -42,8 +41,7 @@ type EnvironmentConfig struct {
 
 func LoadConfig(name string) error {
 	cwd, _ := os.Getwd()
-
-	data, err := ioutil.ReadFile(filepath.Join(cwd, name))
+	data, err := os.ReadFile(filepath.Join(cwd, name))
 	if err != nil {
 		return err
 	}

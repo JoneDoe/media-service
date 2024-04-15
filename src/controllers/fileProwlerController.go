@@ -18,7 +18,7 @@ func (f *FileProwlerController) ProwlFile(c *gin.Context) {
 	err := c.ShouldBindJSON(&request)
 
 	if err != nil {
-		utils.Response{c}.Error(http.StatusUnprocessableEntity, "Invalid request format")
+		utils.Response{Context: c}.Error(http.StatusUnprocessableEntity, "Invalid request format")
 
 		return
 	}
